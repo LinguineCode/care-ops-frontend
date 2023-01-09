@@ -423,6 +423,12 @@ careOptsFrontend:
             }
           ownerLabel: Owner
           stateLabel: State
+        actionSidebarAttachmentsViews:
+          attachmentsViews:
+            addAttachment: Add an Attachment...
+            attachmentsHeadingText: Attachments
+          attachmentView:
+            downloadText: Download
         actionSidebarViews:
           disabledSaveView:
             saveBtn: Save
@@ -461,10 +467,6 @@ careOptsFrontend:
           systemTeam: System
           teamAssigned: '<strong>{ name }</strong> ({ team }) changed the Owner to { to_team }'
           updatedAt: Updated
-        attachmentsViews:
-          attachmentsHeadingText: Attachments
-          attachmentView:
-            downloadText: Download
         formSharingTemplate:
           buttonCancelText: Cancel Share
           buttonResponseText: View Response

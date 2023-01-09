@@ -35,7 +35,7 @@ export default App.extend({
     if (this.action.isNew()) return;
 
     this.activityCollection = new Backbone.Collection([...activity.models, ...comments.models]);
-    this.attachmentsCollection = attachments;
+    this.attachments = attachments;
 
     this.showActivity();
     this.showNewCommentForm();
@@ -66,9 +66,17 @@ export default App.extend({
     });
   },
   showAttachments() {
-    if (!this.attachmentsCollection.length) return;
+    const attachmentsView = new AttachmentsView({ collection: this.attachments });
 
-    this.showChildView('attachments', new AttachmentsView({ collection: this.attachmentsCollection }));
+    this.listenTo(attachmentsView, 'click:add', () => {
+      const file = this.attachments.add({
+        _action: this.action.id,
+        _patient: this.action.getPatient().id,
+      });
+      file.upload();
+    });
+
+    this.showChildView('attachments', attachmentsView);
   },
   viewEvents: {
     'save': 'onSave',
