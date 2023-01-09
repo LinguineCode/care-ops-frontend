@@ -28,6 +28,37 @@
   }
 }
 
+.action-sidebar__attachment-progress {
+  &::-webkit-progress-bar {
+    background: var(--color-white, #FFF);
+    width: 100%;
+  }
+
+  &::-webkit-progress-value {
+    background: var(--color-teal, #006580);
+  }
+
+  &::-moz-progress-bar {
+    background: var(--color-teal, #006580);
+  }
+
+  /*
+.animated::-webkit-progress-value {
+  transition: width 1s;
+  background-color: blue;
+}
+.animated::-moz-progress-bar {
+  transition: padding-bottom 1s;
+  padding-left: 60px;
+  padding-bottom: var(--value);
+  background-color: blue;
+  height: 0;
+  transform-origin: 0 0;
+  transform: rotate(-90deg) translateX(-60px) ;
+}
+  */
+}
+
 .action-sidebar__attachment-filename {
   color: color(blue);
   font-weight: 600;
