@@ -20,7 +20,7 @@ function setToken(tokenString) {
 
 function getToken() {
   if (token) return token;
-  if (!auth0) return;
+  if (!auth0 || !navigator.onLine) return;
 
   return auth0
     .getTokenSilently()
