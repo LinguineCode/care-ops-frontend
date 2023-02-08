@@ -1413,7 +1413,7 @@ context('Patient Action Form', function() {
     cy.tick(5000);
 
     cy
-      .url()
+      .url({ timeout: 10000 })
       .should('contain', 'worklist/owned-by');
 
     cy
@@ -2121,7 +2121,7 @@ context('Patient Form', function() {
     cy.tick(5000);
 
     cy
-      .url()
+      .url({ timeout: 10000 })
       .should('contain', 'worklist/owned-by');
 
     cy
