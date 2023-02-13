@@ -46,6 +46,10 @@ export default async(url, opts) => {
     }),
   });
 
+  // FIXME: Hardcode user's first workspace for now
+  const currentUser = Radio.request('bootstrap', 'currentUser');
+  if (currentUser) options.headers.Workspace = currentUser.getWorkspaces().at(0).id;
+
   return fetch(url, options)
     .then(response => {
       if (!response.ok) {
