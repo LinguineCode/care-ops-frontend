@@ -61,38 +61,30 @@ context('Formservice', function() {
 
   specify('formservice iframe makes correct api requests', function() {
     cy
-      .route({
-        status: 400,
-        method: 'GET',
-        url: '/api/forms/1',
-        response: {},
+      .intercept('GET', '/api/forms/1', {
+        statusCode: 400,
+        body: {},
       })
       .as('routeFormModel');
 
     cy
-      .route({
-        status: 400,
-        method: 'GET',
-        url: '/api/forms/1/definition',
-        response: {},
+      .intercept('GET', '/api/forms/1/definition', {
+        statusCode: 400,
+        body: {},
       })
       .as('routeFormDefinition');
 
     cy
-      .route({
-        status: 400,
-        method: 'GET',
-        url: '/api/forms/1/fields?filter[patient]=1',
-        response: {},
+      .intercept('GET', '/api/forms/1/fields?filter[patient]=1', {
+        statusCode: 400,
+        body: {},
       })
       .as('routeFormPatientFields');
 
     cy
-      .route({
-        status: 400,
-        method: 'GET',
-        url: '/api/form-responses/1/response',
-        response: {},
+      .intercept('GET', '/api/form-responses/1/response', {
+        statusCode: 400,
+        body: {},
       })
       .as('routeFormResponse');
 

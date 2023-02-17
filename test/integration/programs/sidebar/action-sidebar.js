@@ -122,11 +122,9 @@ context('program action sidebar', function() {
       .type('Test{enter} Name');
 
     cy
-      .route({
-        status: 201,
-        method: 'POST',
-        url: '/api/program-actions',
-        response: {
+      .intercept('POST', '/api/program-actions', {
+        statusCode: 201,
+        body: {
           data: {
             id: '1',
             attributes: {
@@ -191,11 +189,9 @@ context('program action sidebar', function() {
       .click();
 
     cy
-      .route({
-        status: 403,
-        method: 'DELETE',
-        url: '/api/program-actions/1*',
-        response: {
+      .intercept('DELETE', '/api/program-actions/1*', {
+        statusCode: 403,
+        body: {
           errors: [
             {
               id: '1',
@@ -226,11 +222,9 @@ context('program action sidebar', function() {
       .contains('Test Name');
 
     cy
-      .route({
-        status: 204,
-        method: 'DELETE',
-        url: '/api/program-actions/1*',
-        response: {},
+      .intercept('DELETE', '/api/program-actions/1*', {
+        statusCode: 204,
+        body: {},
       })
       .as('routeDeleteActionSucceed');
 
@@ -373,11 +367,9 @@ context('program action sidebar', function() {
       .clear();
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/program-actions/1',
-        response: {},
+      .intercept('PATCH', '/api/program-actions/1', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchAction');
 
@@ -714,10 +706,9 @@ context('program action sidebar', function() {
       .routeProgram()
       .routeProgramActions(_.identity, '1')
       .routeProgramFlows(() => [])
-      .route({
-        url: '/api/program-actions/1',
-        status: 404,
-        response: {
+      .intercept('GET', '/api/program-actions/1', {
+        statusCode: 404,
+        body: {
           errors: [{
             id: '1',
             status: '404',

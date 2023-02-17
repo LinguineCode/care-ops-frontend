@@ -99,11 +99,9 @@ context('flow sidebar', function() {
       .click();
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/flows/1',
-        response: {},
+      .intercept('PATCH', '/api/flows/1', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchFlow');
 
@@ -309,11 +307,9 @@ context('flow sidebar', function() {
       .should('not.have.class', 'is-selected');
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/actions/*',
-        response: {},
+      .intercept('PATCH', '/api/actions/*', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchAction');
 
@@ -369,11 +365,9 @@ context('flow sidebar', function() {
       .click();
 
     cy
-      .route({
-        status: 403,
-        method: 'DELETE',
-        url: '/api/flows/1',
-        response: {
+      .intercept('DELETE', '/api/flows/1', {
+        statusCode: 403,
+        body: {
           errors: [
             {
               id: '1',
@@ -410,11 +404,9 @@ context('flow sidebar', function() {
       .click();
 
     cy
-      .route({
-        status: 204,
-        method: 'DELETE',
-        url: '/api/flows/1',
-        response: {},
+      .intercept('DELETE', '/api/flows/1', {
+        statusCode: 204,
+        body: {},
       })
       .as('routeDeleteFlow');
 

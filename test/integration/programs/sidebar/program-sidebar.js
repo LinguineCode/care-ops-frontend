@@ -71,13 +71,12 @@ context('program sidebar', function() {
     const errors = _.map({ name: 'name error' }, getError);
 
     cy
-      .route({
-        method: 'POST',
-        url: '/api/programs',
-        response: { errors },
+      .intercept('POST', '/api/programs', {
+        statusCode: 400,
         delay: 100,
-        status: 400,
-      }).as('routePostProgramError');
+        body: { errors },
+      })
+      .as('routePostProgramError');
 
     cy
       .get('.sidebar')
@@ -113,11 +112,9 @@ context('program sidebar', function() {
       .type('Test{enter} Details');
 
     cy
-      .route({
-        status: 201,
-        method: 'POST',
-        url: '/api/programs',
-        response: {
+      .intercept('POST', '/api/programs', {
+        statusCode: 201,
+        body: {
           data: {
             id: '1',
             attributes: {
@@ -186,11 +183,9 @@ context('program sidebar', function() {
       .wait('@routeProgram');
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/programs/1',
-        response: {},
+      .intercept('PATCH', '/api/programs/1', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchProgram');
 

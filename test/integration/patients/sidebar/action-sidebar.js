@@ -5,6 +5,8 @@ import formatDate from 'helpers/format-date';
 import { testTs, testTsSubtract } from 'helpers/test-timestamp';
 import { testDate, testDateSubtract } from 'helpers/test-date';
 
+import fxTestActionEvents from 'fixtures/test/action-events';
+
 const stateColors = Cypress.env('stateColors');
 
 context('action sidebar', function() {
@@ -150,11 +152,9 @@ context('action sidebar', function() {
       .type('Test{enter} Name');
 
     cy
-      .route({
-        status: 201,
-        method: 'POST',
-        url: '/api/patients/1/relationships/actions*',
-        response: {
+      .intercept('POST', '/api/patients/1/relationships/actions*', {
+        statusCode: 201,
+        body: {
           data: {
             id: '1',
             attributes: {
@@ -215,11 +215,9 @@ context('action sidebar', function() {
       .click();
 
     cy
-      .route({
-        status: 403,
-        method: 'DELETE',
-        url: '/api/actions/1*',
-        response: {
+      .intercept('DELETE', '/api/actions/1*', {
+        statusCode: 403,
+        body: {
           errors: [
             {
               id: '1',
@@ -255,11 +253,9 @@ context('action sidebar', function() {
       .click();
 
     cy
-      .route({
-        status: 204,
-        method: 'DELETE',
-        url: '/api/actions/1*',
-        response: {},
+      .intercept('DELETE', '/api/actions/1*', {
+        statusCode: 204,
+        body: {},
       })
       .as('routeDeleteAction');
 
@@ -373,7 +369,7 @@ context('action sidebar', function() {
         return fx;
       })
       .routeActionActivity(fx => {
-        fx.data = [...this.fxEvents, {}];
+        fx.data = [...fxTestActionEvents, {}];
         fx.data[0].relationships.editor.data = null;
         fx.data[0].attributes.date = testTs();
 
@@ -434,11 +430,9 @@ context('action sidebar', function() {
       .clear();
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/actions/1',
-        response: {},
+      .intercept('PATCH', '/api/actions/1', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchAction');
 
@@ -890,11 +884,9 @@ context('action sidebar', function() {
       .contains('HRA v2.pdf');
 
     cy
-      .route({
-        status: 204,
-        method: 'DELETE',
-        url: '/api/files/*',
-        response: {},
+      .intercept('DELETE', '/api/files/*', {
+        statusCode: 204,
+        body: {},
       })
       .as('routeDeleteFile');
 
@@ -1100,8 +1092,8 @@ context('action sidebar', function() {
       .routeAction()
       .routeActionActivity(fx => {
         fx.data = [];
-        fx.data[0] = this.fxEvents[0];
-        fx.data[1] = this.fxEvents[1];
+        fx.data[0] = fxTestActionEvents[0];
+        fx.data[1] = fxTestActionEvents[1];
 
         fx.data[0].attributes.date = testTsSubtract(8);
         fx.data[1].attributes.date = testTs();
@@ -1225,11 +1217,9 @@ context('action sidebar', function() {
       .click();
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/comments/*',
-        response: {},
+      .intercept('PATCH', '/api/comments/*', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchComment');
 
@@ -1257,11 +1247,9 @@ context('action sidebar', function() {
       .find('.comment__edited');
 
     cy
-      .route({
-        status: 204,
-        method: 'DELETE',
-        url: '/api/comments/*',
-        response: {},
+      .intercept('DELETE', '/api/comments/*', {
+        statusCode: 204,
+        body: {},
       })
       .as('routeDeleteComment');
 
@@ -1328,11 +1316,9 @@ context('action sidebar', function() {
       .type('more comment');
 
     cy
-      .route({
-        status: 204,
-        method: 'POST',
-        url: '/api/actions/*/relationships/comments',
-        response: {},
+      .intercept('POST', '/api/actions/*/relationships/comments', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePostComment');
 
@@ -1372,8 +1358,8 @@ context('action sidebar', function() {
       .routeActionActivity(fx => {
         fx.included = [];
         fx.data = [];
-        fx.data[0] = this.fxEvents[0];
-        fx.data[1] = this.fxEvents[1];
+        fx.data[0] = fxTestActionEvents[0];
+        fx.data[1] = fxTestActionEvents[1];
         fx.data[0].relationships.editor.data = null;
         fx.data[0].attributes.date = testTs();
 
@@ -1444,10 +1430,9 @@ context('action sidebar', function() {
       .routePatient()
       .routePatientActions()
       .routePatientFlows()
-      .route({
-        url: '/api/actions/1*',
-        status: 404,
-        response: {
+      .intercept('GET', '/api/actions/1*', {
+        statusCode: 404,
+        body: {
           errors: [{
             id: '1',
             status: '404',
@@ -1515,11 +1500,9 @@ context('action sidebar', function() {
       .wait('@routeActionComments');
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/actions/12345',
-        response: {},
+      .intercept('PATCH', '/api/actions/12345', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchAction');
 
@@ -1584,11 +1567,9 @@ context('action sidebar', function() {
       .wait('@routeActionComments');
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/actions/12345',
-        response: {},
+      .intercept('PATCH', '/api/actions/12345', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchAction');
 

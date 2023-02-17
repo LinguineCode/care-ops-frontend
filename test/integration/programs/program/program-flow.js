@@ -77,11 +77,9 @@ context('program flow page', function() {
         return fx;
       })
       .routeProgram()
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/programs/1',
-        response: {},
+      .intercept('PATCH', '/api/programs/1', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchProgram')
       .visit('/program-flow/1')
@@ -155,32 +153,24 @@ context('program flow page', function() {
         return fx;
       })
       .routeProgramByProgramFlow()
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/program-flows/1',
-        response: {},
+      .intercept('PATCH', '/api/program-flows/1', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchFlow')
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/program-actions/*',
-        response: {},
+      .intercept('PATCH', '/api/program-actions/*', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchAction')
-      .route({
-        status: 204,
-        method: 'DELETE',
-        url: '/api/program-actions/*',
-        response: {},
+      .intercept('DELETE', '/api/program-actions/*', {
+        statusCode: 204,
+        body: {},
       })
       .as('routeDeleteAction')
-      .route({
-        status: 204,
-        method: 'GET',
-        url: '/api/program-actions/*',
-        response: {},
+      .intercept('GET', '/api/program-actions/*', {
+        statusCode: 204,
+        body: {},
       })
       .as('routeProgramAction')
       .visit('/program-flow/1')
@@ -370,10 +360,9 @@ context('program flow page', function() {
   specify('Flow does not exist', function() {
     cy
       .routeProgramByProgramFlow()
-      .route({
-        url: '/api/program-flows/1',
-        status: 404,
-        response: {
+      .intercept('GET', '/api/program-flows/1', {
+        statusCode: 404,
+        body: {
           errors: [{
             id: '1',
             status: '404',
@@ -440,11 +429,9 @@ context('program flow page', function() {
       })
       .routePrograms()
       .routeProgramByProgramFlow()
-      .route({
-        status: 204,
-        method: 'GET',
-        url: '/api/program-actions/*',
-        response: {},
+      .intercept('GET', '/api/program-actions/*', {
+        statusCode: 204,
+        body: {},
       })
       .as('routeProgramAction')
       .visit('/program-flow/1')
@@ -453,11 +440,9 @@ context('program flow page', function() {
       .wait('@routeProgramByProgramFlow');
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: 'api/program-flows/1/actions',
-        response: {},
+      .intercept('PATCH', 'api/program-flows/1/actions', {
+        statusCode: 204,
+        body: {},
       })
       .as('routeUpdateActionSequences');
 
@@ -500,20 +485,16 @@ context('program flow page', function() {
       });
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/program-actions/1',
-        response: {},
+      .intercept('PATCH', '/api/program-actions/1', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchAction');
 
     cy
-      .route({
-        status: 201,
-        method: 'POST',
-        url: '/api/program-actions',
-        response: {
+      .intercept('POST', '/api/program-actions', {
+        statusCode: 201,
+        body: {
           data: {
             id: '98765',
             attributes: {
@@ -530,20 +511,16 @@ context('program flow page', function() {
       .as('routePostAction');
 
     cy
-      .route({
-        status: 201,
-        method: 'POST',
-        url: '/api/program-flows/1/actions',
-        response: {},
+      .intercept('POST', '/api/program-flows/1/actions', {
+        statusCode: 201,
+        body: {},
       })
       .as('routePostFlowAction');
 
     cy
-      .route({
-        status: 201,
-        method: 'PATCH',
-        url: '/api/program-flows/1/actions',
-        response: {},
+      .intercept('PATCH', '/api/program-flows/1/actions', {
+        statusCode: 201,
+        body: {},
       });
 
     cy
@@ -742,11 +719,9 @@ context('program flow page', function() {
       .go('back');
 
     cy
-      .route({
-        status: 403,
-        method: 'DELETE',
-        url: '/api/program-actions/*',
-        response: {
+      .intercept('DELETE', '/api/program-actions/*', {
+        statusCode: 403,
+        body: {
           errors: [
             {
               id: '1',
@@ -782,11 +757,9 @@ context('program flow page', function() {
       .should('contain', 'Insufficient permissions to delete action');
 
     cy
-      .route({
-        status: 204,
-        method: 'DELETE',
-        url: '/api/program-actions/*',
-        response: {},
+      .intercept('DELETE', '/api/program-actions/*', {
+        statusCode: 204,
+        body: {},
       })
       .as('routeDeleteFlowAction');
 

@@ -181,11 +181,9 @@ context('patient flow page', function() {
 
         return fx;
       })
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/actions/2',
-        response: {},
+      .intercept('PATCH', '/api/actions/2', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchAction')
       .routeActionActivity()
@@ -325,11 +323,9 @@ context('patient flow page', function() {
       .should('contain', '11:15 AM');
 
     cy
-      .route({
-        status: 403,
-        method: 'DELETE',
-        url: '/api/actions/1',
-        response: {
+      .intercept('DELETE', '/api/actions/1', {
+        statusCode: 403,
+        body: {
           errors: [
             {
               id: '1',
@@ -360,11 +356,9 @@ context('patient flow page', function() {
 
 
     cy
-      .route({
-        status: 204,
-        method: 'DELETE',
-        url: '/api/actions/1',
-        response: {},
+      .intercept('DELETE', '/api/actions/1', {
+        statusCode: 204,
+        body: {},
       })
       .as('routeDeleteFlowAction');
 
@@ -454,20 +448,16 @@ context('patient flow page', function() {
       .wait('@routeFlowActions');
 
     cy
-      .route({
-        status: 201,
-        method: 'POST',
-        url: '/api/flows/**/relationships/actions',
-        response() {
-          return {
-            data: {
-              id: 'test-1',
-              attributes: {
-                updated_at: testTs(),
-                due_time: null,
-              },
+      .intercept('POST', '/api/flows/**/relationships/actions', {
+        statusCode: 201,
+        body: {
+          data: {
+            id: 'test-1',
+            attributes: {
+              updated_at: testTs(),
+              due_time: null,
             },
-          };
+          },
         },
       })
       .as('routePostAction');
@@ -525,9 +515,8 @@ context('patient flow page', function() {
   specify('failed flow', function() {
     cy
 
-      .route({
-        status: 404,
-        url: '/api/flows/1**',
+      .intercept('GET', '/api/flows/1**', {
+        statusCode: 404,
       })
       .visit('/flow/1');
 
@@ -632,11 +621,9 @@ context('patient flow page', function() {
         return fx;
       })
       .routeActionActivity()
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/flows/1',
-        response: {},
+      .intercept('PATCH', '/api/flows/1', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchFlow')
       .visit('/flow/1')
@@ -802,18 +789,14 @@ context('patient flow page', function() {
 
         return fx;
       })
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/actions/*',
-        response: {},
+      .intercept('PATCH', '/api/actions/*', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchAction')
-      .route({
-        status: 204,
-        method: 'DELETE',
-        url: '/api/actions/*',
-        response: {},
+      .intercept('DELETE', '/api/actions/*', {
+        statusCode: 204,
+        body: {},
       })
       .as('routeDeleteAction')
       .routeAction(fx => {
@@ -1012,11 +995,9 @@ context('patient flow page', function() {
 
         return fx;
       })
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/actions/*',
-        response: {},
+      .intercept('PATCH', '/api/actions/*', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchAction')
       .routeActionActivity()
@@ -1176,25 +1157,19 @@ context('patient flow page', function() {
       .should('contain', 'Multiple Durations...');
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/actions/1',
-        response: {},
+      .intercept('PATCH', '/api/actions/1', {
+        statusCode: 204,
+        body: {},
       })
       .as('patchAction1')
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/actions/2',
-        response: {},
+      .intercept('PATCH', '/api/actions/2', {
+        statusCode: 204,
+        body: {},
       })
       .as('patchAction2')
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/actions/3',
-        response: {},
+      .intercept('PATCH', '/api/actions/3', {
+        statusCode: 204,
+        body: {},
       })
       .as('patchAction3');
 
@@ -1354,11 +1329,9 @@ context('patient flow page', function() {
       .click();
 
     cy
-      .route({
-        status: 204,
-        method: 'DELETE',
-        url: '/api/actions/*',
-        response: {},
+      .intercept('DELETE', '/api/actions/*', {
+        statusCode: 204,
+        body: {},
       });
 
     cy
@@ -1414,11 +1387,9 @@ context('patient flow page', function() {
       .click();
 
     cy
-      .route({
-        status: 404,
-        method: 'PATCH',
-        url: '/api/actions/*',
-        response: {},
+      .intercept('PATCH', '/api/actions/*', {
+        statusCode: 404,
+        body: {},
       })
       .as('failedPatchAction');
 

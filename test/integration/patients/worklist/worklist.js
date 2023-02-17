@@ -7,6 +7,8 @@ import { testTs, testTsAdd, testTsSubtract } from 'helpers/test-timestamp';
 import { testDate, testDateAdd, testDateSubtract } from 'helpers/test-date';
 import { getResource } from 'helpers/json-api';
 
+import fxFlows from 'fixtures/collections/flows';
+
 const testWorkspaces = [
   {
     id: '1',
@@ -222,11 +224,9 @@ context('worklist page', function() {
       .should('contain', 'State, Owner');
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/flows/1',
-        response: {},
+      .intercept('PATCH', '/api/flows/1', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchFlow');
 
@@ -340,11 +340,9 @@ context('worklist page', function() {
       .should('contain', 'filter[state]=55555,66666,77777');
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/flows/*',
-        response: {},
+      .intercept('PATCH', '/api/flows/*', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchFlow');
 
@@ -463,15 +461,12 @@ context('worklist page', function() {
     ];
 
     cy
-      .fixture('collections/flows').as('fxFlows');
-
-    cy
       .routeWorkspacesBootstrap(_.identity, testWorkspaces)
       .routeActions(fx => {
         const flowInclude = {
           id: '1',
           type: 'flows',
-          attributes: _.extend(_.sample(this.fxFlows), {
+          attributes: _.extend(_.sample(fxFlows), {
             name: 'Test Flow',
             id: '1',
           }),
@@ -674,11 +669,9 @@ context('worklist page', function() {
       .wait('@routeActions');
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/actions/1',
-        response: {},
+      .intercept('PATCH', '/api/actions/1', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchAction');
 

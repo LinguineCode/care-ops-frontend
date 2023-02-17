@@ -6,13 +6,14 @@ import { testDate, testDateSubtract } from 'helpers/test-date';
 import { testTs, testTsSubtract } from 'helpers/test-timestamp';
 import { getResource } from 'helpers/json-api';
 
+import fxTestFormKitchenSink from 'fixtures/test/form-kitchen-sink';
+
 context('Patient Action Form', function() {
   specify('deleted action', function() {
     cy
-      .route({
-        url: '/api/actions/1*',
-        status: 404,
-        response: {
+      .intercept('GET', '/api/actions/1*', {
+        statusCode: 404,
+        body: {
           errors: [{
             id: '1',
             status: '404',
@@ -39,15 +40,19 @@ context('Patient Action Form', function() {
 
   specify('directory', function() {
     cy
-      .route({
-        method: 'GET',
-        url: '/appconfig.json',
-        response: { versions: { frontend: 'foo' } },
+      .intercept('GET', '/appconfig.json', {
+        body: {
+          versions: {
+            frontend: 'foo',
+          },
+        },
       })
-      .route({
-        method: 'GET',
-        url: '/api/directory/foo*',
-        response: { data: { attributes: { value: ['one', 'two'] } } },
+      .intercept('GET', '/api/directory/foo*', {
+        body: {
+          data: {
+            attributes: { value: ['one', 'two'] },
+          },
+        },
       })
       .as('routeDirectory')
       .routeAction(fx => {
@@ -566,6 +571,7 @@ context('Patient Action Form', function() {
         return fx;
       })
       .routeFormResponse(fx => {
+        fx.data.familyHistory = 'Here is some typing';
         fx.data.storyTime = 'Once upon a time...';
 
         return fx;
@@ -733,12 +739,14 @@ context('Patient Action Form', function() {
       .type('New typing');
 
     cy
-      .route({
-        status: 201,
-        method: 'POST',
+      .intercept('POST', '/api/form-responses', {
+        statusCode: 201,
         delay: 100,
-        url: '/api/form-responses',
-        response: { data: { id: '12345' } },
+        body: {
+          data: {
+            id: '12345',
+          },
+        },
       })
       .as('routePostResponse');
 
@@ -857,11 +865,9 @@ context('Patient Action Form', function() {
       .click();
 
     cy
-      .route({
-        status: 204,
-        method: 'DELETE',
-        url: '/api/actions/1',
-        response: {},
+      .intercept('DELETE', '/api/actions/1', {
+        statusCode: 204,
+        body: {},
       })
       .as('routeDeleteAction');
 
@@ -953,12 +959,10 @@ context('Patient Action Form', function() {
       .wait('@routeFormDefinition');
 
     cy
-      .route({
-        status: 403,
-        method: 'POST',
+      .intercept('POST', '/api/form-responses', {
+        statusCode: 403,
         delay: 100,
-        url: '/api/form-responses',
-        response: {
+        body: {
           errors: [
             {
               id: '1',
@@ -1292,12 +1296,14 @@ context('Patient Action Form', function() {
       .wait('@routeFormDefinition');
 
     cy
-      .route({
-        status: 201,
-        method: 'POST',
+      .intercept('POST', '/api/form-responses', {
+        statusCode: 201,
         delay: 100,
-        url: '/api/form-responses',
-        response: { data: { id: '12345' } },
+        body: {
+          data: {
+            id: '12345',
+          },
+        },
       })
       .as('routePostResponse');
 
@@ -1444,12 +1450,10 @@ context('Patient Action Form', function() {
       .wait('@routeFormDefinition');
 
     cy
-      .route({
-        status: 403,
-        method: 'POST',
+      .intercept('POST', '/api/form-responses', {
+        statusCode: 403,
         delay: 100,
-        url: '/api/form-responses',
-        response: {
+        body: {
           errors: [
             {
               id: '1',
@@ -1582,12 +1586,14 @@ context('Patient Form', function() {
       .should('have.value', 'Once upon a time...');
 
     cy
-      .route({
-        status: 201,
-        method: 'POST',
+      .intercept('POST', '/api/form-responses', {
+        statusCode: 201,
         delay: 100,
-        url: '/api/form-responses',
-        response: { data: { id: '12345' } },
+        body: {
+          data: {
+            id: '12345',
+          },
+        },
       })
       .as('routePostResponse');
 
@@ -1816,12 +1822,10 @@ context('Patient Form', function() {
       .wait('@routePatient');
 
     cy
-      .route({
-        status: 403,
-        method: 'POST',
+      .intercept('POST', '/api/form-responses', {
+        statusCode: 403,
         delay: 100,
-        url: '/api/form-responses',
-        response: {
+        body: {
           errors: [
             {
               id: '1',
@@ -2023,12 +2027,14 @@ context('Patient Form', function() {
       .type('Here is some typing');
 
     cy
-      .route({
-        status: 201,
-        method: 'POST',
+      .intercept('POST', '/api/form-responses', {
+        statusCode: 201,
         delay: 100,
-        url: '/api/form-responses',
-        response: { data: { id: '12345' } },
+        body: {
+          data: {
+            id: '12345',
+          },
+        },
       })
       .as('routePostResponse');
 
@@ -2147,12 +2153,10 @@ context('Patient Form', function() {
       .wait('@routePatient');
 
     cy
-      .route({
-        status: 403,
-        method: 'POST',
+      .intercept('POST', '/api/form-responses', {
+        statusCode: 403,
         delay: 100,
-        url: '/api/form-responses',
-        response: {
+        body: {
           errors: [
             {
               id: '1',
@@ -2210,13 +2214,9 @@ context('Patient Form', function() {
 context('Preview Form', function() {
   specify('routing to form', function() {
     cy
-      .fixture('test/form-kitchen-sink.json').as('fxTestFormKitchenSink')
       .routeFlows()
-      .route({
-        url: '/api/forms/*/definition',
-        response() {
-          return this.fxTestFormKitchenSink;
-        },
+      .intercept('GET', '/api/forms/*/definition', {
+        body: fxTestFormKitchenSink,
       })
       .as('routeFormKitchenSink')
       .visit('/form/11111/preview')

@@ -5,6 +5,10 @@ import { NIL as NIL_UUID } from 'uuid';
 import formatDate from 'helpers/format-date';
 import { testDate, testDateAdd, testDateSubtract } from 'helpers/test-date';
 
+import fxActions from 'fixtures/collections/actions';
+import fxPatients from 'fixtures/collections/patients';
+import fxFlows from 'fixtures/collections/flows';
+
 const states = ['22222', '33333'];
 
 const testWorkspaces = [
@@ -113,7 +117,7 @@ context('schedule page', function() {
           {
             id: '1',
             type: 'flows',
-            attributes: _.extend(_.sample(this.fxFlows), {
+            attributes: _.extend(_.sample(fxFlows), {
               name: 'Complex Care Management',
               id: '1',
             }),
@@ -121,7 +125,7 @@ context('schedule page', function() {
           {
             id: '1',
             type: 'patients',
-            attributes: _.extend(_.sample(this.fxPatients), {
+            attributes: _.extend(_.sample(fxPatients), {
               first_name: 'Test',
               last_name: 'Patient',
               id: '1',
@@ -130,7 +134,7 @@ context('schedule page', function() {
           {
             id: '2',
             type: 'patients',
-            attributes: _.extend(_.sample(this.fxPatients), {
+            attributes: _.extend(_.sample(fxPatients), {
               first_name: 'LongTest',
               last_name: 'PatientName',
               id: '1',
@@ -1121,7 +1125,7 @@ context('schedule page', function() {
           {
             id: '1',
             type: 'patients',
-            attributes: _.extend(_.sample(this.fxPatients), {
+            attributes: _.extend(_.sample(fxPatients), {
               first_name: 'Test',
               last_name: 'Patient',
               id: '1',
@@ -1130,7 +1134,7 @@ context('schedule page', function() {
           {
             id: '1',
             type: 'flows',
-            attributes: _.extend(_.sample(this.fxFlows), {
+            attributes: _.extend(_.sample(fxFlows), {
               name: 'Complex Care Management',
               id: '1',
             }),
@@ -1473,11 +1477,9 @@ context('schedule page', function() {
       .should('contain', 'Edit 20 Actions');
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/actions/*',
-        response: {},
+      .intercept('PATCH', '/api/actions/*', {
+        statusCode: 204,
+        body: {},
       })
       .as('patchAction');
 
@@ -1565,11 +1567,9 @@ context('schedule page', function() {
       .click();
 
     cy
-      .route({
-        status: 204,
-        method: 'DELETE',
-        url: '/api/actions/*',
-        response: {},
+      .intercept('DELETE', '/api/actions/*', {
+        statusCode: 204,
+        body: {},
       });
 
     cy
@@ -1602,11 +1602,9 @@ context('schedule page', function() {
       .should('have.length', 15);
 
     cy
-      .route({
-        status: 401,
-        method: 'PATCH',
-        url: '/api/actions/*',
-        response: {},
+      .intercept('PATCH', '/api/actions/*', {
+        statusCode: 401,
+        body: {},
       })
       .as('patchActionFail');
 
@@ -1710,7 +1708,7 @@ context('schedule page', function() {
           {
             id: 1,
             type: 'flows',
-            attributes: _.extend(_.sample(this.fxActions), {
+            attributes: _.extend(_.sample(fxActions), {
               name: 'Parent Flow',
               id: '1',
             }),
@@ -1718,7 +1716,7 @@ context('schedule page', function() {
           {
             id: '1',
             type: 'patients',
-            attributes: _.extend(_.sample(this.fxPatients), {
+            attributes: _.extend(_.sample(fxPatients), {
               first_name: 'Test',
               last_name: 'Patient',
               id: 1,
@@ -1727,7 +1725,7 @@ context('schedule page', function() {
           {
             id: '2',
             type: 'patients',
-            attributes: _.extend(_.sample(this.fxPatients), {
+            attributes: _.extend(_.sample(fxPatients), {
               first_name: 'LongTest',
               last_name: 'PatientName',
               id: 1,

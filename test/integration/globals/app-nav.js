@@ -602,11 +602,9 @@ context('App Nav', function() {
       .click();
 
     cy
-      .route({
-        status: 201,
-        method: 'POST',
-        url: '/api/patients',
-        response: {
+      .intercept('POST', '/api/patients', {
+        statusCode: 201,
+        body: {
           data: {
             id: '1',
             first_name: 'First',
@@ -830,11 +828,9 @@ context('App Nav', function() {
       .should('not.have.class', 'has-error');
 
     cy
-      .route({
-        status: 400,
-        method: 'POST',
-        url: '/api/patients',
-        response: {
+      .intercept('POST', '/api/patients', {
+        statusCode: 400,
+        body: {
           errors: [{
             status: '400',
             title: 'Bad Request',

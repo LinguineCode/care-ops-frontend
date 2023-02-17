@@ -1,19 +1,16 @@
 import _ from 'underscore';
 import { getResource, getIncluded, getRelationship } from 'helpers/json-api';
 
-function patientFixtures() {
-  cy
-    .fixture('collections/patients').as('fxPatients')
-    .fixture('collections/actions').as('fxActions')
-    .fixture('collections/patient-fields').as('fxPatientFields')
-    .fixture('collections/workspaces').as('fxWorkspaces');
-}
+import fxPatients from 'fixtures/collections/patients';
+import fxActions from 'fixtures/collections/actions';
+import fxPatientFields from 'fixtures/collections/patient-fields';
+import fxWorkspaces from 'fixtures/collections/workspaces';
 
 function generatePatientData() {
-  const data = getResource(_.sample(this.fxPatients), 'patients');
-  const action = _.sample(this.fxActions, 10);
-  const workspaces = _.sample(this.fxWorkspaces, 2);
-  const fields = _.sample(this.fxPatientFields, 5);
+  const data = getResource(_.sample(fxPatients), 'patients');
+  const action = _.sample(fxActions, 10);
+  const workspaces = _.sample(fxWorkspaces, 2);
+  const fields = _.sample(fxPatientFields, 5);
 
   data.relationships = {
     'actions': { data: getRelationship(action, 'patient-actions') },
@@ -34,13 +31,8 @@ function generatePatientData() {
 }
 
 Cypress.Commands.add('routePatient', (mutator = _.identity) => {
-  patientFixtures();
-
-  cy.route({
-    url: '/api/patients/**?*',
-    response() {
-      return mutator(generatePatientData.call(this));
-    },
+  cy.intercept('GET', '/api/patients/**?*', {
+    body: mutator(generatePatientData()),
   })
     .as('routePatient');
 
@@ -48,25 +40,15 @@ Cypress.Commands.add('routePatient', (mutator = _.identity) => {
 });
 
 Cypress.Commands.add('routePatientByAction', (mutator = _.identity) => {
-  patientFixtures();
-
-  cy.route({
-    url: '/api/actions/**/patient',
-    response() {
-      return mutator(generatePatientData.call(this));
-    },
+  cy.intercept('GET', '/api/actions/**/patient', {
+    body: mutator(generatePatientData()),
   })
     .as('routePatientByAction');
 });
 
 Cypress.Commands.add('routePatientByFlow', (mutator = _.identity) => {
-  patientFixtures();
-
-  cy.route({
-    url: '/api/flows/**/patient',
-    response() {
-      return mutator(generatePatientData.call(this));
-    },
+  cy.intercept('GET', '/api/flows/**/patient', {
+    body: mutator(generatePatientData()),
   })
     .as('routePatientByFlow');
 });

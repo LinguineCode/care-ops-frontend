@@ -1,27 +1,23 @@
 import _ from 'underscore';
 import { getResource, getRelationship } from 'helpers/json-api';
 
+import fxComments from 'fixtures/collections/comments';
+import fxClinicians from 'fixtures/collections/clinicians';
+
 Cypress.Commands.add('routeActionComments', (mutator = _.identity) => {
-  cy
-    .fixture('collections/comments').as('fxComments')
-    .fixture('collections/clinicians').as('fxClinicians');
+  const data = getResource(_.sample(fxComments, 5), 'comments');
 
-  cy.route({
-    url: '/api/actions/**/relationships/comments',
-    response() {
-      const data = getResource(_.sample(this.fxComments, 5), 'comments');
+  _.each(data, comment => {
+    comment.relationships = {
+      clinician: { data: getRelationship(_.sample(fxClinicians), 'clinicians') },
+    };
+  });
 
-      _.each(data, comment => {
-        comment.relationships = {
-          clinician: { data: getRelationship(_.sample(this.fxClinicians), 'clinicians') },
-        };
-      });
-
-      return mutator({
-        data,
-        included: [],
-      });
-    },
+  cy.intercept('GET', '/api/actions/**/relationships/comments', {
+    body: mutator({
+      data,
+      included: [],
+    }),
   })
     .as('routeActionComments');
 });

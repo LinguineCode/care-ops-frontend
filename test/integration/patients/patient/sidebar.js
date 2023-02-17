@@ -698,12 +698,10 @@ context('patient sidebar', function() {
       .wait('@routeFormDefinition');
 
     cy
-      .route({
-        status: 403,
-        method: 'POST',
+      .intercept('POST', '/api/form-responses', {
+        statusCode: 403,
         delay: 300,
-        url: '/api/form-responses',
-        response: {
+        body: {
           errors: [
             {
               id: '1',
@@ -745,11 +743,13 @@ context('patient sidebar', function() {
       .wait('@postFormResponse');
 
     cy
-      .route({
-        status: 201,
-        method: 'POST',
-        url: '/api/form-responses',
-        response: { data: { id: '12345' } },
+      .intercept('POST', '/api/form-responses', {
+        statusCode: 201,
+        body: {
+          data: {
+            id: '12345',
+          },
+        },
       })
       .as('postFormResponse');
 

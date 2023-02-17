@@ -66,11 +66,9 @@ context('program workflows page', function() {
       .wait('@routeProgramFlows');
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/program-actions/1',
-        response: {},
+      .intercept('PATCH', '/api/program-actions/1', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchAction');
 
@@ -236,11 +234,9 @@ context('program workflows page', function() {
       .as('flowItem');
 
     cy
-      .route({
-        status: 204,
-        method: 'PATCH',
-        url: '/api/program-flows/1',
-        response: {},
+      .intercept('PATCH', '/api/program-flows/1', {
+        statusCode: 204,
+        body: {},
       })
       .as('routePatchFlow');
 
@@ -416,18 +412,14 @@ context('program workflows page', function() {
       .type('Test Flow');
 
     cy
-      .route({
-        status: 201,
-        method: 'POST',
-        url: '/api/programs/1/relationships/flows',
-        response() {
-          return {
-            id: '1',
-            attributes: {
-              updated_at: testTs(),
-              name: 'Test Flow',
-            },
-          };
+      .intercept('POST', '/api/programs/1/relationships/flows', {
+        statusCode: 201,
+        body: {
+          id: '1',
+          attributes: {
+            updated_at: testTs(),
+            name: 'Test Flow',
+          },
         },
       })
       .as('routePostFlow');
