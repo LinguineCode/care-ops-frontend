@@ -238,7 +238,7 @@ context('worklist page', function() {
       .should('contain', 'Clinician McTester')
       .next()
       .find('.picklist__heading')
-      .should('contain', 'Group One');
+      .should('contain', 'Workspace One');
 
     cy
       .get('.picklist')
@@ -679,7 +679,7 @@ context('worklist page', function() {
       .should('contain', 'Clinician McTester')
       .next()
       .find('.picklist__heading')
-      .should('contain', 'Group One');
+      .should('contain', 'Workspace One');
 
     cy
       .get('.picklist')
@@ -929,7 +929,7 @@ context('worklist page', function() {
     cy
       .get('.picklist')
       .find('.picklist__group')
-      .contains('Group One')
+      .contains('Workspace One')
       .parent()
       .find('.js-picklist-item')
       .first()
@@ -1070,7 +1070,7 @@ context('worklist page', function() {
       .find('.app-nav__link')
       .contains('Shared By')
       .click()
-      .wait('@routeFlows');
+      .wait('@routeActions');
 
     cy
       .get('[data-owner-toggle-region]')
@@ -1079,7 +1079,7 @@ context('worklist page', function() {
       .click();
 
     cy
-      .wait('@routeFlows')
+      .wait('@routeActions')
       .itsUrl()
       .its('search')
       .should('contain', `filter[clinician]=${ NIL_UUID }`)
@@ -1092,7 +1092,7 @@ context('worklist page', function() {
       .click();
 
     cy
-      .wait('@routeFlows')
+      .wait('@routeActions')
       .itsUrl()
       .its('search')
       .should('not.contain', `filter[clinician]=${ NIL_UUID }`)
